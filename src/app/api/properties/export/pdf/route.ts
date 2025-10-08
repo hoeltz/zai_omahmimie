@@ -62,13 +62,9 @@ export async function GET() {
       yPosition += 8
     })
     
-    // Add footer
-    const pageCount = doc.getNumberOfPages()
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i)
-      doc.setFontSize(8)
-      doc.text(`Halaman ${i} dari ${pageCount}`, 105, 285, { align: 'center' })
-    }
+    // Add simple footer
+    doc.setFontSize(8)
+    doc.text(`Generated on ${new Date().toLocaleDateString('id-ID')}`, 105, 285, { align: 'center' })
     
     const pdfBuffer = Buffer.from(doc.output('arraybuffer'))
     

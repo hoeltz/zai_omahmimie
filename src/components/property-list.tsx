@@ -12,7 +12,7 @@ import { toast } from "sonner"
 import { PropertyViewModal } from "@/components/property-view-modal"
 import { PropertyEditModal } from "@/components/property-edit-modal"
 
-interface Property {
+export interface Property {
   id: string
   jenisProperti: string
   statusListing: string

@@ -1,12 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-export async function PUT(
+interface RouteParams {
+  params: Promise<{ id: string }>
+}
+
+export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
-    const id = params.id
+    const { id } = await params
+
+    const property = await db.property.findUnique({
+      where: {
+        id: id,
+      },
+    })
+
+    if (!property) {
+      return NextResponse.json(
+        { error: 'Property not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(property)
+  } catch (error) {
+    console.error('Error fetching property:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: RouteParams
+) {
+  try {
+    const { id } = await params
     const body = await request.json()
     
     const {
@@ -96,10 +130,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
-    const id = params.id
+    const { id } = await params
 
     const property = await db.property.delete({
       where: {

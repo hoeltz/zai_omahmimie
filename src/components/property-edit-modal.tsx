@@ -842,7 +842,7 @@ export function PropertyEditModal({ property, open, onClose, onSave }: PropertyE
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <PhotoUpload photos={photos} setPhotos={setPhotos} maxPhotos={12} />
+                    <PhotoUpload photos={photos} onPhotosChange={setPhotos} maxPhotos={12} />
                   </CardContent>
                 </Card>
               </TabsContent>
