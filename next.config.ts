@@ -1,32 +1,23 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Production optimizations
+  // Basic configuration
   reactStrictMode: true,
   
-  // Image optimization for production
+  // Image configuration
   images: {
     domains: ['localhost'],
-    unoptimized: true, // For Vercel deployment
+    unoptimized: false,
   },
   
-  // Environment variables
-  env: {
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  },
-  
-  // Build optimizations
+  // Development-friendly settings
   typescript: {
-    ignoreBuildErrors: false, // Enable TypeScript checking
+    ignoreBuildErrors: false,
   },
   
-  // ESLint configuration
   eslint: {
-    ignoreDuringBuilds: false, // Enable ESLint checking
+    ignoreDuringBuilds: false,
   },
-  
-  // Server external packages
-  serverExternalPackages: ['@prisma/client'],
 };
 
 export default nextConfig;

@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     description: "Aplikasi responsif untuk pendataan properti",
     type: "website",
   },
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
