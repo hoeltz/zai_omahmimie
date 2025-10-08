@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Property {
+  id                    String   @id @default(cuid())
+  jenisProperti         String   // Rumah/Apartemen/Tanah/Ruko/Gudang
+  statusListing         String   // Dijual/Disewa
+  hargaJualSewa         String
+  alamatLengkap         String
+  luasTanah             Int?     // M2
+  luasBangunan          Int?     // M2
+  jumlahLantai          Int?
+  kamarTidur            Int?
+  kamarMandi            Int?
+  carportGarasi         String?
+  arahHadap             String?  // Utara/Selatan/Timur/Barat
+  kondisi               String?  // Baru/Seken/Butuh Renovasi
+  furnishing            String?  // Unfurnished/Semi/Full Furnished
+  jenisSertifikat       String?  // SHM/HGB/SHMRS/Lainnya
+  imb                   String?  // Ada/Tidak Ada
+  pbb                   String?
+  kapasitasListrik      Int?     // VA
+  tipeMeteran           String?  // Token/Pascabayar
+  sumberAirUtama        String?  // PDAM/Sumur Bor/Sumur Gali
+  tandonAir             String?  // Ada/Tidak Ada
+  kapasitasTandon       Int?     // liter
+  aksesJalan            String?  // Aspal/Paving
+  lebarJalan            Int?     // m
+  bebasBanjir           String?  // Ya/Tidak
+  keamananKompleks      String?  // 24 Jam/One Gate System/Tidak Ada
+  iplBulanan            String?
+  fasilitasTerdekat     String?
+  namaPemilik           String
+  noKontakAktif         String
+  kondisiProperti       String?  // Kosong/Dihuni Pemilik/Sedang Disewa
+  komisiAgen            String?
+  photos                String?  // JSON string array of photo URLs (max 12 photos)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
