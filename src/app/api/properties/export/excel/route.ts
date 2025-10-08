@@ -10,13 +10,21 @@ export async function GET() {
       },
     })
 
+    // Check if there are properties to export
+    if (properties.length === 0) {
+      return NextResponse.json(
+        { error: 'Tidak ada data properti untuk diekspor' },
+        { status: 404 }
+      )
+    }
+
     // Transform data for Excel
     const excelData = properties.map((property, index) => ({
       'No': index + 1,
-      'Jenis Properti': property.jenisProperti,
-      'Status Listing': property.statusListing,
-      'Harga Jual/Sewa': property.hargaJualSewa,
-      'Alamat Lengkap': property.alamatLengkap,
+      'Jenis Properti': property.jenisProperti || '-',
+      'Status Listing': property.statusListing || '-',
+      'Harga Jual/Sewa': property.hargaJualSewa || '-',
+      'Alamat Lengkap': property.alamatLengkap || '-',
       'Luas Tanah (m²)': property.luasTanah || '-',
       'Luas Bangunan (m²)': property.luasBangunan || '-',
       'Jumlah Lantai': property.jumlahLantai || '-',
@@ -40,8 +48,8 @@ export async function GET() {
       'Keamanan Kompleks': property.keamananKompleks || '-',
       'IPL Bulanan': property.iplBulanan || '-',
       'Fasilitas Terdekat': property.fasilitasTerdekat || '-',
-      'Nama Pemilik': property.namaPemilik,
-      'No. Kontak Aktif': property.noKontakAktif,
+      'Nama Pemilik': property.namaPemilik || '-',
+      'No. Kontak Aktif': property.noKontakAktif || '-',
       'Kondisi Properti': property.kondisiProperti || '-',
       'Komisi Agen': property.komisiAgen || '-',
       'Tanggal Dibuat': new Date(property.createdAt).toLocaleDateString('id-ID'),
@@ -99,12 +107,13 @@ export async function GET() {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': `attachment; filename="property-data-${new Date().toISOString().split('T')[0]}.xlsx"`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     })
   } catch (error) {
     console.error('Error generating Excel:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Gagal generate Excel: ' + (error instanceof Error ? error.message : 'Unknown error') },
       { status: 500 }
     )
   }

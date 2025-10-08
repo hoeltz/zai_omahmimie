@@ -10,6 +10,14 @@ export async function GET() {
       },
     })
 
+    // Check if there are properties to export
+    if (properties.length === 0) {
+      return NextResponse.json(
+        { error: 'Tidak ada data properti untuk diekspor' },
+        { status: 404 }
+      )
+    }
+
     const doc = new jsPDF()
     
     // Header
@@ -18,12 +26,13 @@ export async function GET() {
     
     doc.setFontSize(12)
     doc.text(`Tanggal: ${new Date().toLocaleDateString('id-ID')}`, 105, 30, { align: 'center' })
+    doc.text(`Total Properti: ${properties.length}`, 105, 37, { align: 'center' })
     
     let yPosition = 50
     
     properties.forEach((property, index) => {
       // Check if we need a new page
-      if (yPosition > 250) {
+      if (yPosition > 240) {
         doc.addPage()
         yPosition = 20
       }
@@ -64,7 +73,7 @@ export async function GET() {
     
     // Add simple footer
     doc.setFontSize(8)
-    doc.text(`Generated on ${new Date().toLocaleDateString('id-ID')}`, 105, 285, { align: 'center' })
+    doc.text(`Generated on ${new Date().toLocaleDateString('id-ID')} by Omah Mimie`, 105, 285, { align: 'center' })
     
     const pdfBuffer = Buffer.from(doc.output('arraybuffer'))
     
@@ -72,12 +81,13 @@ export async function GET() {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="property-data-${new Date().toISOString().split('T')[0]}.pdf"`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     })
   } catch (error) {
     console.error('Error generating PDF:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Gagal generate PDF: ' + (error instanceof Error ? error.message : 'Unknown error') },
       { status: 500 }
     )
   }

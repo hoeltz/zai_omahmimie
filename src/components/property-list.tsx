@@ -126,45 +126,75 @@ export function PropertyList() {
 
   const exportToPDF = async () => {
     try {
+      // Show loading toast
+      toast.loading('Menghasilkan PDF...')
+      
       const response = await fetch('/api/properties/export/pdf')
-      if (!response.ok) throw new Error('Gagal export PDF')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Gagal export PDF')
+      }
       
       const blob = await response.blob()
+      
+      // Check if blob is empty
+      if (blob.size === 0) {
+        throw new Error('PDF kosong, tidak ada data untuk diekspor')
+      }
+      
+      // Create download link
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
       a.download = `property-list-${new Date().toISOString().split('T')[0]}.pdf`
       document.body.appendChild(a)
       a.click()
+      
+      // Cleanup
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
       
       toast.success('PDF berhasil diunduh!')
     } catch (error) {
-      toast.error('Gagal mengunduh PDF')
-      console.error(error)
+      console.error('PDF Export Error:', error)
+      toast.error(error instanceof Error ? error.message : 'Gagal mengunduh PDF')
     }
   }
 
   const exportToExcel = async () => {
     try {
+      // Show loading toast
+      toast.loading('Menghasilkan Excel...')
+      
       const response = await fetch('/api/properties/export/excel')
-      if (!response.ok) throw new Error('Gagal export Excel')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Gagal export Excel')
+      }
       
       const blob = await response.blob()
+      
+      // Check if blob is empty
+      if (blob.size === 0) {
+        throw new Error('Excel kosong, tidak ada data untuk diekspor')
+      }
+      
+      // Create download link
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
       a.download = `property-list-${new Date().toISOString().split('T')[0]}.xlsx`
       document.body.appendChild(a)
       a.click()
+      
+      // Cleanup
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
       
       toast.success('Excel berhasil diunduh!')
     } catch (error) {
-      toast.error('Gagal mengunduh Excel')
-      console.error(error)
+      console.error('Excel Export Error:', error)
+      toast.error(error instanceof Error ? error.message : 'Gagal mengunduh Excel')
     }
   }
 
